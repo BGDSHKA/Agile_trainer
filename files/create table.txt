@@ -1,0 +1,113 @@
+USE u0865082_default;
+
+CREATE TABLE Kompaniya (
+    KodKompanii INT,
+    NazvanieKompanii VARCHAR(30),
+    FIODirectora VARCHAR(60),
+    Adres VARCHAR(50),
+    Telefon VARCHAR(12),
+    PRIMARY KEY (KodKompanii)
+) 
+
+INSERT INTO Kompaniya VALUES (1,'ООО Разработка систем','Иванов Иван Иванович','ул. Ленина 45а', '89125869348')
+
+INSERT INTO Zadachi VALUES (1,1,'Требования','Высокий',10,NULL,'В процессе',3,'Выявить требования заказчика и записать их в реестр требований!')
+
+<table class="table float-left">
+  <thead class="table-dark">
+    <tr>
+      <td>ID_User</td>
+      <td>Код компании</td>
+      <td>Почта</td>
+      <td>Роль</td>
+      <td>Навыки</td>
+    </tr>
+    <?php
+      $sql = mysqli_query($connect, 'SELECT `IDUser`, `KodKompanii`, `Email`, `Rol`, `Naviki` FROM `Users`');
+      while ($result = mysqli_fetch_array($sql)) {
+        echo "<tr><td>{$result['IDUser']}</td><td>{$result['KodKompanii']}</td><td>{$result['Email']}</td><td>{$result['Rol']}</td><td>{$result['Naviki']}</td></tr>";
+      }
+    ?>
+  </thead>
+  </table>
+
+<table class="table" id="sort2">
+  <thead class="table-dark">
+    <tr>
+      <td>Код группы</td>
+      <td>Код участника</td>
+      <td>Комментарий</td>
+    </tr> </thead>
+    <?php
+      $sql = mysqli_query($connection, 'SELECT `KodGruppi`, `IDUser`, `Kommentariy` FROM `Gruppa`');
+      while ($result = mysqli_fetch_array($sql)) {
+        echo "<tr><td>{$result['KodGruppi']}</td><td>{$result['IDUser']}</td><td>{$result['Kommentariy']}</td></tr>";
+      }
+    ?>
+  </table>
+
+
+<?php
+ session_start();
+  require('connect.php');
+  $email = $_SESSION['email'];
+if(isset($_POST['message'])){
+ $sql = mysqli_query($connection, "INSERT INTO `Messages` (`Email`,`Message`) VALUES ('$email','{$_POST[`message`]}')");
+  
+}
+
+$sql = mysqli_query($connection, "SELECT `Message` FROM `Messages` ORDER BY `id` DESC");
+while($row = mysqli_fetch_object($sql)){
+ printf("<div>%s</div>",$row->Message);
+
+}
+
+?>
+
+
+   <?php
+      $sql = mysqli_query($connection, 'SELECT `KodProjecta`, `NazvanieProjecta` FROM `Project`');
+      while ($result = mysqli_fetch_array($sql)) {
+       echo "<option value=$result['KodProjecta']>$result['NazvanieProjecta']</option>";
+      }
+    ?>
+
+<div class="form-group">
+  <label class="control-label" for="selectp">Выберите проект</label>
+  <div>
+    <select id="textinput" name="selectp" class="form-control"> 
+    
+    <?php 
+     $sql = mysqli_query($connection, 'SELECT `KodProjecta`, `NazvanieProjecta` FROM `Project`');
+    while ($result = mysqli_fetch_array($sql)): ?>
+      <option value="<?= $result['KodProjecta']; ?>"><?= $result['NazvanieProjecta']; ?></option>
+    <?php endwhile; ?>
+     
+    </select>
+  </div>
+</div>
+
+
+     <form method="post" action="upload.php" enctype = 'multipart/form-data' >
+    <input type="file" name="file">
+    <input type="submit" value="Загрузить">
+</form>
+
+<div class="input-group mb-3">
+  <div class="custom-file">
+    <input type="file" class="custom-file-input" id="inputGroupFile02">
+    <label class="custom-file-label" for="inputGroupFile02" name="file">Choose file</label>
+  </div>
+  <div class="input-group-append">
+    <span class="input-group-text" type="submit" id="">Upload</span>
+  </div>
+</div>
+
+
+<?php if(isset($_POST["KodProjecta"])): ?>
+ <?php endif; ?>
+
+   <?php if (isset($_GET['red_id'])) { 
+    echo "<option value='$group['KodProjecta']'>$group['KodProjecta']</option>";}
+    else
+       {POST['KodProjecta']} ?>
