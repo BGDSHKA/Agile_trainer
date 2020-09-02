@@ -1,4 +1,4 @@
-# Project_Manager_Agile_trainer
+# Project Manager Agile trainer
 Тренажёр отработки этапов проектного менеджмента (Agile)
 
 ## Функции <br/>
